@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ihm"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+PyQt5 = "^5.15.9"
+psutil = "^5.9.4"
+
+[tool.poetry.group.dev.dependencies]
+appmap = "^1.14.1"
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
