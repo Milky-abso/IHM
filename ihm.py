@@ -1,3 +1,5 @@
+import appmap
+
 from PyQt5.QtCore import Qt, QCoreApplication, QTimer, QRect, QPoint, pyqtSignal, pyqtSlot, QObject, QSize
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, \
     QFrame, QGridLayout, QMessageBox, QFormLayout, QButtonGroup, QStackedWidget, QMainWindow, QTabWidget, \
@@ -14,6 +16,7 @@ import pickle
 import logging
 import psutil
 import ctypes
+import sys
 
 libc = ctypes.cdll.LoadLibrary('libc.so.6')
 rasp_config = False  # True = config raspberry, False = config ordinateur)
@@ -2778,6 +2781,9 @@ class SignalLauncher(QObject):
 class Launcher:
     def __init__(self):
         self.app = QApplication(sys.argv)
+        self.recording = appmap.Recording()
+        self.recording.start()
+        self.app.aboutToQuit.connect(self.showRecording)
         if rasp_config:
             self.app.setOverrideCursor(QCursor(Qt.BlankCursor))  # Fait sauter le curseur pour l'écran tactile
         self.screen = self.app.primaryScreen()
@@ -2796,7 +2802,10 @@ class Launcher:
         self.win.menu.setGeometry(QRect(-300, 0, 314 + 12, self.win.menu.y_size))
         print("Launching Qt application...")
         sys.exit(self.app.exec())  # lancement de la boucle infinie qui choppe les events de Qt
-
+        
+    def showRecording(self):
+        self.recording.stop()
+        print(appmap.generation.dump(self.recording), file=sys.stderr)
 
 if __name__ == '__main__':
     launch = Launcher()  # Premiere ligne du programme. On construit la classe launcher.
